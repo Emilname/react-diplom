@@ -41,6 +41,21 @@ const StyledMainAppRoot = styled(MainAppContentRoot)<{
   flex: 1,
   background: "white",
   borderRadius: " 24px 0px 0px 24px",
+  width: disabled ? "calc(100% + 232px)" : "100%",
+  ...(disabled
+    ? {
+        "&:after": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          background: "rgba(255,255,255,.8)",
+          borderRadius: " 24px 0px 0px 24px",
+        },
+      }
+    : {}),
 }));
 
 export default function AppBody({
