@@ -1,7 +1,7 @@
 import { styled } from "@mui/system";
 import { ColvirLogoIcon } from "../icons";
 import ProfileIcon from "../icons/ProfileIcon";
-import Navigation from "./Navigation";
+import SideMenuActions from "./SideMenuActions";
 import { CloseFilledIcon } from "../icons";
 import Tree from "../Tree/Tree";
 
@@ -135,7 +135,11 @@ function Drawer({ expanded, onClose, onOpen }: DrawerProps) {
           <ColvirLogoContainer>
             <ColvirLogoIcon onClick={expanded ? onClose : onOpen} />
           </ColvirLogoContainer>
-          <Navigation />
+          <SideMenuActions
+            menuExpanded={expanded}
+            expandMenu={onOpen}
+            collapseMenu={onClose}
+          />
           <ProfileIconContainer>
             <ProfileIcon />
           </ProfileIconContainer>
