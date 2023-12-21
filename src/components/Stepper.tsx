@@ -1,5 +1,7 @@
 import { styled } from "@mui/system";
 import Badge from "./Bage";
+import { useState } from "react";
+import { ArrowDownIcon } from "../icons";
 const StepperRoot = styled("div")({
   width: 280,
   padding: 24,
@@ -41,6 +43,7 @@ const StepIndex = styled("div")<{ active?: boolean }>(({ active }) => ({
 }));
 
 const StepLabel = styled("span")<{ active?: boolean }>(({ active }) => ({
+  position: "relative",
   color: !active ? "#041526" : "#1173DA",
   marginLeft: 8,
 
@@ -51,8 +54,11 @@ const StepLabel = styled("span")<{ active?: boolean }>(({ active }) => ({
   lineHeight: "normal",
 }));
 
-const StepLabelRoot = styled("li")({});
-
+const StepLabelRoot = styled("div")<{ index: number | string }>({
+  display: "flex",
+  alignItems: "center",
+});
+const StepItemRoot = styled("li")({ display: "block" });
 const SubstepLabel = styled("li")<{ active?: boolean }>(({ active }) => ({
   color: active ? "#1173DA" : "",
   width: 200,
@@ -84,10 +90,17 @@ const SubstepsRoot = styled("div")({
   display: "flex",
 });
 
+const StyledBadge = styled(Badge)({
+  transform: "none",
+  marginLeft: 8,
+  verticalAlign: "middle",
+});
+
 function Substeps({
   steps = [],
   active,
   lastChild = false,
+  open,
 }: {
   steps?: SubstepData[];
   active?: boolean;
@@ -96,37 +109,56 @@ function Substeps({
 }) {
   return (
     <SubstepsRoot>
-      {!lastChild && <StepLeftLine active={active} />}
-      <SubstepsListRoot>
-        {steps.map(({ id, label, active }) => (
-          <SubstepLabel key={id} active={active}>
-            {label}
-          </SubstepLabel>
-        ))}
-      </SubstepsListRoot>
+      {(!lastChild || (open && steps.length > 0)) && (
+        <StepLeftLine active={active} />
+      )}
+      {open && (
+        <SubstepsListRoot>
+          {steps.map(({ id, label, active }) => (
+            <SubstepLabel key={id} active={active}>
+              {label}
+            </SubstepLabel>
+          ))}
+        </SubstepsListRoot>
+      )}
     </SubstepsRoot>
   );
 }
 
+const StyledArrowDownIcon = styled(ArrowDownIcon)({
+  opacity: 0.3,
+  marginLeft: "auto",
+});
+
 export default function Stepper({ steps }: { steps: StepData[] }) {
+  const [activeId, setActiveId] = useState(4);
+
   return (
     <StepperRoot>
-      {steps.map(({ id, label, subSteps, active, badgeContent }, idx) => (
-        <StepLabelRoot>
-          <StepIndex active={active}>{idx + 1}</StepIndex>
-          <StepLabel active={active}>
-            {label}
-            {badgeContent != null && <Badge badgeContent={badgeContent} />}
-          </StepLabel>
-          <Substeps
-            key={id}
-            steps={subSteps}
-            active={active}
-            open={idx == 4}
-            lastChild={idx == steps.length - 1}
-          />
-        </StepLabelRoot>
-      ))}
+      {steps.map(({ id, label, subSteps, badgeContent }, idx) => {
+        const active = id == activeId;
+        return (
+          <StepItemRoot>
+            <StepLabelRoot key={id} onClick={() => setActiveId(id)} index={id}>
+              <StepIndex active={active}>{idx + 1}</StepIndex>
+              <StepLabel active={active}>
+                {label}
+                {badgeContent != null && (
+                  <StyledBadge badgeContent={badgeContent} />
+                )}
+              </StepLabel>{" "}
+              {active && <StyledArrowDownIcon fill="#041526" />}
+            </StepLabelRoot>
+            <Substeps
+              key={id}
+              steps={subSteps}
+              active={active}
+              open={active}
+              lastChild={idx == steps.length - 1}
+            />
+          </StepItemRoot>
+        );
+      })}
     </StepperRoot>
   );
 }

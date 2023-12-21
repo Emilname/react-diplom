@@ -15,4 +15,5 @@ export { default as DotIcon } from "./DotIcon";
 export { default as ToBegginingIcon } from "./ToBegginingIcon";
 export { default as ToEndIcon } from "./ToEndIcon";
 export { default as ToNextIcon } from "./ToNextIcon";
-export { default as TopreviousIcon } from "./ToBegginingIcon";
+export { default as ToPreviousIcon } from "./ToPreviousIcon";
+export { default as ArrowDownIcon } from "./ArrowDownIcon";
