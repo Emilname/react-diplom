@@ -44,33 +44,60 @@ const TableCaption = styled("span")({
   lineHeight: "normal",
 });
 
+const subSteps = [
+  { id: 7, label: "Исполнение пункта графика" },
+  { id: 8, label: "Распределение изменения суммы процентов" },
+  { id: 9, label: "Пересчет суммы вознаграждения" },
+  { id: 10, label: "Предоставление кредита" },
+  {
+    id: 11,
+    label: "Расчет графика кредита с равномерным ...",
+    active: true,
+  },
+  { id: 12, label: "Начисление вознаграждения" },
+  { id: 13, label: "Расчет суммы комиссии и суммы выдачи кредита" },
+  { id: 14, label: "Выполнение расчета по запросу" },
+  { id: 15, label: "Подготовка сумм требований к выставлению" },
+];
+
+function shuffle(array: Array<any>) {
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex > 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+}
+
+const getSubsteps = (parentId: number) =>
+  shuffle(
+    subSteps.map((subStep) => ({ ...subStep, id: "" + parentId + subStep.id }))
+  ).filter(() => parentId == 5 || Math.random() > 0.25);
+
 const steps = [
-  { id: 1, label: "Общие данные" },
-  { id: 2, label: "Параметры" },
-  { id: 3, label: "Процентные ставки" },
-  { id: 4, label: "Расчетные категории" },
+  { id: 1, label: "Общие данные", subSteps: getSubsteps(1) },
+  { id: 2, label: "Параметры", subSteps: getSubsteps(2) },
+  { id: 3, label: "Процентные ставки", subSteps: getSubsteps(3) },
+  { id: 4, label: "Расчетные категории", subSteps: getSubsteps(4) },
   {
     id: 5,
     label: "Сценарии",
     badgeContent: 9,
-    subSteps: [
-      { id: 7, label: "Исполнение пункта графика" },
-      { id: 8, label: "Распределение изменения суммы процентов" },
-      { id: 9, label: "Пересчет суммы вознаграждения" },
-      { id: 10, label: "Предоставление кредита" },
-      {
-        id: 11,
-        label: "Расчет графика кредита с равномерным ...",
-        active: true,
-      },
-      { id: 12, label: "Начисление вознаграждения" },
-      { id: 13, label: "Расчет суммы комиссии и суммы выдачи кредита" },
-      { id: 14, label: "Выполнение расчета по запросу" },
-      { id: 15, label: "Подготовка сумм требований к выставлению" },
-    ],
+    subSteps: getSubsteps(5),
     active: true,
   },
-  { id: 6, label: "События" },
+  { id: 6, label: "События", subSteps: getSubsteps(6) },
 ];
 
 const columns = ["Дата", "IP", "Порт", "Статус"];
